@@ -19,6 +19,10 @@ public class CatalogPage extends BasePage{
     By catalogItemText = By.xpath("(//*[@class=\"media-body\"]//div//p)[1]");
     By catalogItemEditButton = By.xpath("(//*[@class=\"media-body\"]//button[text()='Edit'])[1]");
     By updateItemButton = By.xpath("//button[text()='Update Item']");
+    By deleteItemButton = By.xpath("//*[contains(text(), '" + inputs.getProperty("item_description") + "')]/parent::div/parent::div//button[text()='Delete']");
+    By deleteItemConfirmationButton = By.xpath("//button[text()='Yes, delete it!']");
+    By createdItems = By.xpath("//*[contains(text(), '" + inputs.getProperty("item_description") + "')]");
+
     int itemId;
 
 
@@ -61,5 +65,15 @@ public class CatalogPage extends BasePage{
     public void validateEditedItem() {
         assertTrue(webElement(catalogItemText).getText().contains(" (edited)"));
     }
+
+    public void deleteItem() {
+        int createdItemsBeforeDelete = getElementsAmount(createdItems);
+        click(deleteItemButton);
+        click(deleteItemConfirmationButton);
+        driver.navigate().refresh();
+        int createdItemsAfterDelete = getElementsAmount(createdItems);
+        assertTrue(createdItemsBeforeDelete > createdItemsAfterDelete);
+    }
+
 
 }

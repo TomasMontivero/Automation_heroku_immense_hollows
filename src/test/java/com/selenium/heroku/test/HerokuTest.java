@@ -31,13 +31,13 @@ public class HerokuTest {
         driver.navigate().refresh();
         catalogPage.validateEditedItem();
     }
-/*
+
     @Test
     @Order(3)
     public void deleteItem() {
-        //
+        catalogPage.deleteItem();
     }
-
+/*
     @Test
     @Order(4)
     public void validateDescriptionMaxLength() {

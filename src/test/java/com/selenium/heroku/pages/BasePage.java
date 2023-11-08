@@ -3,13 +3,13 @@ package com.selenium.heroku.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Properties;
 
 public class BasePage {
@@ -58,6 +58,11 @@ public class BasePage {
     public String getText(By locator) {
         wait.until(ExpectedConditions.visibilityOf(webElement(locator)));
         return webElement(locator).getText();
+    }
+
+    public int getElementsAmount(By locator) {
+        List<WebElement> webElementList = driver.findElements(locator);
+        return webElementList.size();
     }
 
 
