@@ -17,24 +17,32 @@ public class BasePage {
     WebDriver driver;
     WebDriverWait wait;
     Properties urls = new Properties();
+    Properties inputs = new Properties();
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         try {
-            urls.load(new FileInputStream("src/test/resources/urls.properties"));
+            urls.load(new FileInputStream("src/test/resources/properties/urls.properties"));
+            inputs.load(new FileInputStream("src/test/resources/properties/inputs.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public WebElement webElement(By by) {
-        return driver.findElement(by);
+    public WebElement webElement(By locator) {
+        return driver.findElement(locator);
     }
 
-    public void get(String url) {
-        driver.get(url);
+    public boolean isPresent(By locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
+
 
     public void click(By locator) {
         wait.until(ExpectedConditions.visibilityOf(webElement(locator)));
@@ -44,7 +52,7 @@ public class BasePage {
     public void sendKeys(By locator, String text) {
         wait.until(ExpectedConditions.visibilityOf(webElement(locator)));
         driver.findElement(locator).clear();
-        driver.findElement(locator).sendKeys();
+        driver.findElement(locator).sendKeys(text);
     }
 
     public String getText(By locator) {
