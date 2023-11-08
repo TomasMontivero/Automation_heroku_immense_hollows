@@ -16,19 +16,22 @@ public class HerokuTest {
     @Test
     @Order(1)
     public void createItem() {
-        catalogPage.goToCatalog();
-        catalogPage.uploadImage();
-        catalogPage.setDescription();
+        catalogPage.uploadNewItemImage();
+        catalogPage.setNewItemText();
         catalogPage.clickCreateItem();
         catalogPage.validateItemCreation();
     }
 
-/*    @Test
+   @Test
     @Order(2)
     public void editItem() {
-        //
+        catalogPage.editFirstCatalogItem();
+        catalogPage.editItemText();
+        catalogPage.clickUpdateItem();
+        driver.navigate().refresh();
+        catalogPage.validateEditedItem();
     }
-
+/*
     @Test
     @Order(3)
     public void deleteItem() {
@@ -53,6 +56,8 @@ public class HerokuTest {
         driver = new ChromeDriver();
         catalogPage = new CatalogPage(driver);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+        driver.manage().window().maximize();
+        catalogPage.goToCatalog();
     }
 
     @AfterEach
