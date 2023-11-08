@@ -1,12 +1,12 @@
 package com.selenium.heroku.test;
 
 import com.selenium.heroku.pages.CatalogPage;
-import org.openqa.selenium.WebDriver;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
 import java.time.Duration;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class HerokuTest {
 
     WebDriver driver;
@@ -37,18 +37,18 @@ public class HerokuTest {
     public void deleteItem() {
         catalogPage.deleteItem();
     }
-/*
+
     @Test
     @Order(4)
     public void validateDescriptionMaxLength() {
-        //
+        catalogPage.validateTextFieldCharactersLimit();
     }
 
     @Test
     @Order(5)
     public void validateItemVisibility() {
-        //
-    }*/
+        catalogPage.validateCreatorsItemVisibility();
+    }
 
 
     @BeforeEach

@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CatalogPage extends BasePage{
@@ -15,7 +16,7 @@ public class CatalogPage extends BasePage{
 
     By imageUploadButton = By.id("inputImage");
     By textAreaInput = By.name("text");
-    By submitButton = By.className("btn-success");
+    By createItemButton = By.className("btn-success");
     By catalogItemText = By.xpath("(//*[@class=\"media-body\"]//div//p)[1]");
     By catalogItemEditButton = By.xpath("(//*[@class=\"media-body\"]//button[text()='Edit'])[1]");
     By updateItemButton = By.xpath("//button[text()='Update Item']");
@@ -41,11 +42,11 @@ public class CatalogPage extends BasePage{
     }
 
     public void clickCreateItem() {
-        click(submitButton);
+        click(createItemButton);
     }
 
-    public void validateItemCreation() {
-        assertTrue(isPresent(By.xpath("//*[contains(text(), '" + inputs.getProperty("item_description") + itemId  + "')]")));
+    public void clickUpdateItem() {
+        click(updateItemButton);
     }
 
     public void editFirstCatalogItem() {
@@ -58,14 +59,6 @@ public class CatalogPage extends BasePage{
         sendKeys(textAreaInput, newItemText);
     }
 
-    public void clickUpdateItem() {
-        click(updateItemButton);
-    }
-
-    public void validateEditedItem() {
-        assertTrue(webElement(catalogItemText).getText().contains(" (edited)"));
-    }
-
     public void deleteItem() {
         int createdItemsBeforeDelete = getElementsAmount(createdItems);
         click(deleteItemButton);
@@ -73,6 +66,27 @@ public class CatalogPage extends BasePage{
         driver.navigate().refresh();
         int createdItemsAfterDelete = getElementsAmount(createdItems);
         assertTrue(createdItemsBeforeDelete > createdItemsAfterDelete);
+    }
+
+    public void validateItemCreation() {
+        assertTrue(isPresent(By.xpath("//*[contains(text(), '" + inputs.getProperty("item_description") + itemId  + "')]")));
+    }
+
+    public void validateEditedItem() {
+        assertTrue(webElement(catalogItemText).getText().contains(" (edited)"));
+    }
+
+    public void validateTextFieldCharactersLimit() {
+        sendKeys(textAreaInput, inputs.getProperty("item_description_299_characters"));
+        assertTrue(webElement(createItemButton).isEnabled());
+        sendKeys(textAreaInput, inputs.getProperty("item_description_300_characters"));
+        assertTrue(webElement(createItemButton).isEnabled());
+        sendKeys(textAreaInput, inputs.getProperty("item_description_301_characters"));
+        assertFalse(webElement(createItemButton).isEnabled());
+    }
+
+    public void validateCreatorsItemVisibility() {
+        assertTrue(isPresent(By.xpath("//*[contains(text(), '" + inputs.getProperty("creators_item_description") + "')]")));
     }
 
 
