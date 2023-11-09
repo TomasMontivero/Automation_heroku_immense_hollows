@@ -13,7 +13,6 @@
         <maven.compiler.target>21</maven.compiler.target>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--<start-class>src/test/java/com/springboot/Main.java</start-class>-->
     </properties>
 
     <dependencies>
@@ -22,12 +21,6 @@
             <artifactId>selenium-java</artifactId>
             <version>4.15.0</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -45,13 +38,6 @@
             <artifactId>surefire-junit47</artifactId>
             <version>3.2.2</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>-->
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -87,7 +73,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.1.5</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <build>
@@ -96,8 +82,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <!--<source>${java.version}</source>
-                    <target>${java.version}</target>-->
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                 </configuration>

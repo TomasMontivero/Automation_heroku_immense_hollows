@@ -1,16 +1,13 @@
 # Base image for JDK
-####FROM eclipse-temurin:21
 FROM eclipse-temurin:21-jdk-alpine
 
 # Set working dorectory
 WORKDIR /app
 
 # Copy Maven files
-####COPY .mvn/ .mvn
-####COPY mvnw pom.xml ./
 COPY pom.xml ./
 
-# ????
+# Maven configuration
 ENV MAVEN_HOME /usr/share/maven
 COPY --from=maven:3.9.5-eclipse-temurin-11 ${MAVEN_HOME} ${MAVEN_HOME}
 COPY --from=maven:3.9.5-eclipse-temurin-11 /usr/local/bin/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
@@ -23,19 +20,14 @@ ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["mvn"]
 
 # Download/install Maven dependencies
-####RUN ./mvnw dependency:resolve
 RUN mvn -B -f pom.xml -s /usr/share/maven/ref/settings-docker.xml dependency:resolve
-
 
 # Copy all code files
 COPY src ./src
 
 # Command to run in the container
 RUN mvn clean install
-####CMD ["./mvnw", "spring-boot:run"]
 CMD ["mvn", "spring-boot:run"]
-
-
 
 # Test
 RUN echo "hello world"

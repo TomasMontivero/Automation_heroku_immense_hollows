@@ -1,20 +1,20 @@
 package com.springboot.controller;
 
-import com.selenium.heroku.test.HerokuTest;
-import com.selenium.heroku.test.SampleTest;
-import com.selenium.heroku.test.StrangerThingsTest;
-import org.apache.catalina.core.ApplicationContext;
+import com.selenium.test.HerokuTest;
+import com.selenium.test.SampleTest;
+import com.selenium.test.StrangerThingsTest;
+import com.springboot.models.TestResultDTO;
 import org.junit.internal.TextListener;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 
 @RestController
@@ -22,46 +22,23 @@ import java.util.List;
 public class APIController {
 
 
+    Logger logger = Logger.getLogger("APIController");
+
     @GetMapping("/health")
     public ResponseEntity<String> testEndpoint() {
-        System.out.println("-------- @GetMapping(health)");
+        logger.info("Endpoint: /health - Job: testEndpoint");
         return ResponseEntity.ok("Test endpoint: OK");
     }
 
-    @GetMapping("/v3")
-    public ResponseEntity<String> automationEndpoint_v3() {
-        System.out.println("-------- @GetMapping(v1)");
+
+    @GetMapping("/smoke")
+    public ResponseEntity<TestResultDTO> runSmokeTest() {
+        logger.info("Endpoint: /smoke - Job: runSmokeTest");
         JUnitCore junit = new JUnitCore();
         junit.addListener(new TextListener(System.out));
         Result result = junit.run(HerokuTest.class);
-        int runCount = result.getRunCount();
-        int runFailure = result.getFailureCount();
-        boolean success = result.wasSuccessful();
-        List<Failure> failureList = result.getFailures();
-
-        return ResponseEntity.ok("- Success: " + success + " - Failures: " + runFailure + " - Run count: " + runCount + " - FailureList: " + failureList);
+        return ResponseEntity.ok(new TestResultDTO(result));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> automationEndpoint_test() {
-        //Result result = JUnitCore.runClasses(SampleTest.class);
-        //System.out.println("Test endpoint");
-        //int testsEjecutados = result.getRunCount();
-        //return ResponseEntity.ok("Tests: " + testsEjecutados);
-
-        JUnitCore junit = new JUnitCore();
-        junit.addListener(new TextListener(System.out));
-        Result result = junit.run(SampleTest.class);
-        return ResponseEntity.ok("Tests: " + result.getRunCount());
-    }
-
-    @GetMapping("/strangerthings")
-    public ResponseEntity<String> strangetThingsTests() {
-        System.out.println("Test endpoint start");
-        Result result = JUnitCore.runClasses(StrangerThingsTest.class);
-        System.out.println("Test endpoint end");
-        int testsEjecutados = result.getRunCount();
-        return ResponseEntity.ok("Tests run:: " + testsEjecutados);
-    }
 
 }
