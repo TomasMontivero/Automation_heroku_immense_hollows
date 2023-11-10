@@ -1,16 +1,13 @@
 package com.selenium.test;
 
 import com.selenium.pages.CatalogPage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.*;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -26,7 +23,7 @@ import java.time.Duration;
 import java.util.logging.Logger;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SampleTest.class)
+@ContextConfiguration(classes = HerokuTest.class)
 @FixMethodOrder( MethodSorters.NAME_ASCENDING )
 public class HerokuTest implements ApplicationContextAware {
 
@@ -83,21 +80,52 @@ public class HerokuTest implements ApplicationContextAware {
 
     @Before
     public void setupEach() {
-        //driver = new ChromeDriver();
-        //String remoteUrl = "http://localhost:4444/wd/hub";    //TODO: Uncomment to run locally
-        String remoteUrl = "http://selenium-hub:4444/wd/hub";   //TODO: Uncomment to run through docker
-        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-        desiredCapabilities.setBrowserName("chrome");
-        try {
-            driver = new RemoteWebDriver(new URL(remoteUrl), desiredCapabilities);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
+        setWebDriverEnviroment();
+        setDriverWindowSize();
         catalogPage = new CatalogPage(driver);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
-        driver.manage().window().maximize();
         catalogPage.goToCatalog();
+    }
+
+    public void setWebDriverEnviroment() {
+        String enviroment = System.getenv("webdriver_enviroment");
+        if (enviroment == null) {
+            // Chromedriver local
+            System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver/chromedriver.exe");
+            driver = new ChromeDriver();
+        } else if (enviroment.equals("remote")){
+            // RemoteWebDriver
+            String remoteUrl = "http://selenium-hub:4444/wd/hub";
+            DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+            desiredCapabilities.setBrowserName("chrome");
+            try {
+                driver = new RemoteWebDriver(new URL(remoteUrl), desiredCapabilities);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+            ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
+        } else {
+            return;
+        }
+    }
+
+    public void setDriverWindowSize() {
+        String device = System.getProperty("webdriver_size");
+        if (device == null) {
+            // Default windowed size
+            return;
+        }
+        switch (device) {
+            case "mobile":
+                // Mobile window size
+                driver.manage().window().setSize(new Dimension(400,900));
+                break;
+            case "desktop":
+                // Desktop window size
+                driver.manage().window().maximize();
+            default:
+                // Default windowed size
+        }
     }
 
     @After

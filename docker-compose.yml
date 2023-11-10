@@ -26,6 +26,8 @@ services:
       - chrome
     ports:
       - "8080:8080"
+    environment:
+      - webdriver_enviroment=remote
 
 
 #  selenium-hub:
