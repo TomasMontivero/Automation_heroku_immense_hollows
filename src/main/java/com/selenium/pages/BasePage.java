@@ -1,4 +1,4 @@
-package com.selenium.heroku.pages;
+package com.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -23,8 +23,8 @@ public class BasePage {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         try {
-            urls.load(new FileInputStream("src/test/resources/properties/urls.properties"));
-            inputs.load(new FileInputStream("src/test/resources/properties/inputs.properties"));
+            urls.load(new FileInputStream("src/main/resources/properties/urls.properties"));
+            inputs.load(new FileInputStream("src/main/resources/properties/inputs.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
